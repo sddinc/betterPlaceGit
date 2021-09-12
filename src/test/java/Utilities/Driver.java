@@ -9,6 +9,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Function;
@@ -66,7 +68,11 @@ public class Driver {
         }
 
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.manage().window().maximize();
+
+        Dimension dim = new Dimension(400,791);
+        driver.manage().window().setSize(dim);
+        //driver.manage().window().maximize();
+
 
         return driver;
     }
@@ -286,6 +292,10 @@ public class Driver {
     public static void setAttribute(WebElement element, String attributeName, String attributeValue) {
         ((JavascriptExecutor) Driver.getDriver()).executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", element, attributeName, attributeValue);
     }
+
+
+
+
     /**
      * @param element
      * @param check
@@ -333,6 +343,7 @@ public class Driver {
     public static void waitAndSendText(WebElement element,String text, int timeout) {
         for (int i = 0; i < timeout; i++) {
             try {
+                scrollToElement(element);
                 element.sendKeys(text);
                 return;
             } catch (WebDriverException e) {
@@ -341,15 +352,38 @@ public class Driver {
         }
     }
 
+
     public static void waitAndClick(WebElement element, int timeout) {
+
+
         for (int i = 0; i < timeout; i++) {
             try {
+                scrollToElement(element);
                 element.click();
                 return;
             } catch (WebDriverException e) {
                 wait(1);
             }
         }
+
+    }
+
+
+
+    public static void selectDropdown (WebElement element, int  index){
+        Select dropdown = new Select(element);
+        dropdown.selectByIndex(index);
+    }
+
+    public static void selectDropdownCountry (WebElement element, int  countryIndex){
+        Select dropdown = new Select(element);
+        dropdown.selectByIndex(countryIndex);
+//select dropdownlist
+    }
+
+    public static int getRandomInteger(WebElement element,int maximum, int minimum){
+        return ((int) (Math.random()*(maximum - minimum))) + minimum;
+
     }
 
 
